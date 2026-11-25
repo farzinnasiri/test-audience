@@ -1,16 +1,14 @@
 ---
 name: test-audience
-description: "Test whether an app is really ready by using it from the outside, the way people will: synthetic first-time users (impatient, skeptic, mobile, literal, breaker), an App Store or Google Play reviewer walkthrough, or a synthetic concept panel that ranks product, pricing or positioning variants. Drives the running app through a browser, simulator, emulator, cloud device or computer use, never the source code. Use when asked to QA an app as real users would, run persona or first-user tests, check whether store review would reject it, find out why people bounce, or screen concepts with synthetic consumers. Not for unit tests, code review or security testing."
+description: "Use when asked to test onboarding as first-time users, rehearse an App Store or Google Play review, compare concepts or prices with synthetic consumers, or recheck a previous finding. Walkthroughs use the running app and report observed friction with evidence."
 license: MIT
 ---
 
 # Test audience
 
-Find out whether a product is ready by using it the way its users and reviewers will. Every run picks a **mode** (who is looking) and a **surface** (how they touch the app), states what that surface can't test, and waits for the owner's go-ahead.
+Choose a mode from the owner's question. For a walkthrough, use the running app and report what happened. For a concept panel, collect reactions to the supplied variants and label the results as hypotheses.
 
-This is simulated use. It finds real defects and friction, and it produces hypotheses about people. It never replaces real users, real reviewers or a real survey.
-
-## The rules (every mode)
+## Rules for every run
 
 1. **Outside only.** Never open, list, search or read the project's source, config, tests, git history or build scripts, not even to find a route or a test account. Everything comes from the owner or from the running app. A store reviewer also sees the installed build's manifest or Info.plist, the listing and the review notes, so those are allowed.
 2. **Act like a user.** Act only through the interface: a browser, a simulator or emulator, a real or cloud device, or computer use. Never call the backend's API, query its database, seed data with scripts or inject JavaScript to click things.
@@ -80,10 +78,10 @@ Mention that screenshots may contain test data, and that the output folder may b
 
 ## 5. Run, then report
 
-Follow the mode's reference. Every mode ends with:
+Follow the mode's reference. Use the mode guide's report format. For walkthroughs, include the following items.
 - A verdict line, plus a findings table ranked by severity, then by breadth (format in [evidence.md](references/evidence.md)).
 - The coverage list: `NOT TESTABLE HERE` and `NOT RUN`.
 - For `first-users` and `store-review`, a **fix brief**: self-contained findings with reproduction steps, written for a coding agent that wasn't in this run.
 - One next step: recheck, another mode, or a real-user test for whatever only real people can answer.
 
-Keep the chat summary short; the full report and screenshots go in the output folder.
+For a concept panel, report objections, scoring uncertainty when available, and the next real-user test. Keep the chat summary short and save the full report in the output folder.

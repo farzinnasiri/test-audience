@@ -1,56 +1,50 @@
-# test-audience
+<h1><img src="docs/test-audience.png" alt="Test audience — a dress rehearsal for your app" width="100%"></h1>
 
-An agent skill that checks whether your app is really ready by putting it in front of a **test audience** before real people see it. The agent uses the running app the way people will, through a browser, simulator, emulator, cloud device or computer use, and never reads your source code.
+[![Claude Code](docs/agents/claude-code.png)](https://claude.com/product/claude-code) [![Codex](docs/agents/codex.png)](https://openai.com/codex/) [![Grok Build](docs/agents/grok-build.png)](https://docs.x.ai/build/overview) [![Grok Bot](docs/agents/grok-bot.png)](https://docs.x.ai/grok-bot/skills-routines-and-automations) [![Antigravity](docs/agents/antigravity.png)](https://antigravity.google/) [![Pi](docs/agents/pi.png)](https://pi.dev/) [![Cursor](docs/agents/cursor.png)](https://cursor.com/)
+
+[![View on skills.sh](https://img.shields.io/badge/skills.sh-test--audience-245c53)](https://skills.sh/farzinnasiri/test-audience/test-audience) [![MIT license](https://img.shields.io/badge/license-MIT-444b50)](LICENSE)
+
+**Where would a first-time user give up?** Give your coding agent a staging URL or test build and one task that matters. Five simulated users try it through the interface. You get the steps they took, screenshots of what went wrong, and a fix brief you can hand to a developer.
+
+## Try it
 
 ```bash
 npx skills add farzinnasiri/test-audience
 ```
 
-Works with Claude Code, Codex, Cursor and the other agents the [`skills` CLI](https://github.com/vercel-labs/skills) supports. Then ask your agent something like "test my app like first-time users would", "would App Store review reject this build?" or "which of these three paywalls should I test with real users?"
+Then ask your agent:
 
-## Modes
+> Try my staging app as five first-time users. Start on the landing page and try to save a first project. Show me where each user finished or gave up.
 
-| Mode | Who's looking | What you get |
-|---|---|---|
-| `first-users` | Five first-time users with hard behavior rules: **impatient** (8 actions, quits at the first error), **skeptic** (reads pricing, terms and privacy first), **mobile** (375px or the smallest device, slow network), **literal** (only what labels say, keyboard and accessibility tree), **breaker** (bad input, double taps, back mid-flow). Optional: returning, interrupted, or your own segment. | Findings with screenshots and steps to reproduce, ranked by severity then by how many personas hit them, plus a fix brief for your coding agent |
-| `store-review` | An Apple App Review or Google Play reviewer on a clean install, using only your listing, review notes and test credentials | A checklist with guideline citations, the rejection risks found, draft Review Notes or App access instructions, and what to check in the console |
-| `concept-panel` | A synthetic consumer panel scoring 2–5 concepts, pages or prices with Semantic Similarity Rating | A relative ranking with uncertainty and the top objections, always labeled **synthetic hypothesis** |
-| `recheck` | The same personas, fresh, after you fix things | Each finding marked fixed, still failing or changed, plus new regressions |
+The impatient user gets eight actions. The skeptic looks for pricing and privacy before signing up. The mobile user tries a small screen, the literal reader follows labels, and the breaker double-taps and goes back mid-flow. You approve the target, tools and test accounts before the run.
 
-## How a run works
+## Pick a run
 
-1. **The skill picks the mode** from your request and asks at most three short questions if something's missing: where the app runs, the first-success moment, and test access.
-2. **It checks which tools you have** and picks the most faithful surface. It lists up front what that surface can't test. For example, a mobile app in a desktop browser can't test native gestures, permission sheets, purchases or push.
-3. **It shows a run plan and waits for your yes:** target, surface, personas, what's not testable, cost and output folder.
-4. **It runs and reports.** It never edits your code. Fixing is a separate step with whatever agent owns the code, followed by `recheck`.
+| What do you want to learn? | What you get |
+| --- | --- |
+| [Can first-time users finish a task?](skills/test-audience/references/first-users.md) | Reproducible findings ranked by severity, then by how many personas hit them. |
+| [What might block store review?](skills/test-audience/references/store-review.md) | A walkthrough of the build against your listing, risks with policy citations, and draft Apple Review Notes or Google Play App access instructions. |
+| [Which concept should I test with people?](skills/test-audience/references/concept-panel.md) | Objections to 2–5 variants and, when scoring is available, a relative ranking. Treat it as a synthetic hypothesis. |
+| [Did the fix work?](skills/test-audience/references/first-users.md#recheck) | A replay of the earlier findings on the new build, with a result for each and any new regressions. |
 
-## Safety defaults
+<details>
+<summary><strong>Tools and test access</strong></summary>
 
-- No production targets unless you name one and accept it in the plan.
-- Only test accounts and sandbox or test payments. No real messages to real people.
-- Uploading a build to a cloud device service needs its own approval.
-- Screenshots are checked for secrets and personal data before they're saved.
-- Untested things are reported as `NOT TESTABLE HERE` or `NOT RUN`, never as passes.
+[Claude Code](https://claude.com/product/claude-code) · [Codex](https://openai.com/codex/) · [Grok Build](https://docs.x.ai/build/overview) · [Antigravity](https://antigravity.google/) · [Pi](https://pi.dev/) · [Cursor](https://cursor.com/) · [All CLI agents](https://github.com/vercel-labs/skills/blob/main/docs/agents.md)
 
-## What it needs
+[Grok Bot private skill setup](https://docs.x.ai/grok-bot/skills-routines-and-automations)
 
-- **Web:** a browser automation tool, such as [agent-browser](https://github.com/vercel-labs/agent-browser) or Playwright MCP.
-- **iOS:** Xcode's Simulator plus a UI driver, such as [mobile-mcp](https://github.com/mobile-next/mobile-mcp), [Maestro](https://maestro.dev) or agent-device.
-- **Android:** an emulator or device with `adb`, plus one of the same drivers.
-- **Concept panel scoring:** Python and [uv](https://docs.astral.sh/uv/). The first run downloads a small local embedding model.
+For a walkthrough, the agent needs browser controls or a UI driver for a simulator, emulator or device. Use test accounts and sandbox payments. The report records what the chosen device could verify. [Supported surfaces](skills/test-audience/references/surfaces.md) · [Report format](skills/test-audience/references/evidence.md)
 
-Without a usable tool, the skill stops and tells you what to install.
+For a concept panel, supply the variants and intended audience. Numeric scoring uses Python, uv and a local embedding model downloaded on first use. Without scoring, you still get the objections.
 
-## Limits
+</details>
 
-These are simulated people. Persona runs find real defects and friction, but they can't tell you whether people want the product. Store-review mode can't predict a reviewer's decision. Concept-panel scores are relative and unvalidated for apps. The evidence behind them comes from consumer product concepts, and independent studies find synthetic respondents flatter than real ones. Use the results to decide what to put in front of real people first.
+<details>
+<summary><strong>Credits and research</strong></summary>
 
-## Credits
+Persona QA draws on the five-user launch prompt. Run planning, persona isolation and reporting draw on [first-user-audit](https://github.com/BarganConstantin/agent-skills) (MIT).
 
-- Persona QA idea popularized in a viral prompt. Gate, isolation and report ideas informed by [first-user-audit](https://github.com/BarganConstantin/agent-skills) (MIT).
-- Semantic Similarity Rating: Maier et al., [*LLMs Reproduce Human Purchase Intent via Semantic Similarity Elicitation of Likert Ratings*](https://arxiv.org/abs/2510.08338) (2025), using PyMC Labs' [semantic-similarity-rating](https://github.com/pymc-labs/semantic-similarity-rating) package.
-- Store review checklists are summaries of Apple's and Google's public guidelines. Always check the current versions.
+Concept scoring uses [PyMC Labs’ Semantic Similarity Rating](https://github.com/pymc-labs/semantic-similarity-rating). The [original study](https://arxiv.org/abs/2510.08338) evaluated stated purchase intent for personal-care concepts. For an app, use the panel to choose what to test with real people.
 
-## License
-
-MIT
+</details>
